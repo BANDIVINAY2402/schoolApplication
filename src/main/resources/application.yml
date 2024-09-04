@@ -1,0 +1,39 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: tasks
+  main:
+    debug: true
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/SchoolApplication
+    username: postgres
+    password: 2402
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+ 
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  mail:
+    host: smtp.gmail.com
+    port: 587 
+    username: "bandivinay24@gmail.com"
+    password: "bicm nmls xdme mfzw"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true 

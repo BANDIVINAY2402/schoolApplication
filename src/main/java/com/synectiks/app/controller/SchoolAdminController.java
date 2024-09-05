@@ -14,11 +14,13 @@ import com.synectiks.app.service.SchoolAdminService;
 
 import jakarta.persistence.Tuple;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
+@CrossOrigin
 public class SchoolAdminController {
 	
 	@Autowired

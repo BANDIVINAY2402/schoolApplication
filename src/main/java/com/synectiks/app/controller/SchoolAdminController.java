@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.synectiks.app.entity.FeeDetails;
 import com.synectiks.app.entity.StudentDetailsEntity;
-import com.synectiks.app.entity.StudentDetailsOfThisMonthTransactionDto;
+
+import com.synectiks.app.entity.TransactionDetailsDto;
 import com.synectiks.app.service.SchoolAdminService;
 
 import jakarta.persistence.Tuple;
@@ -32,8 +33,8 @@ public class SchoolAdminController {
 		return new String();
 	}
 	@GetMapping("/Dashboard/recenttransactions")
-	public ResponseEntity<List<StudentDetailsEntity>> getRecentTransactions() {
-	List<StudentDetailsEntity> studentdetails=schooladminservice.gettransactions();
+	public ResponseEntity<List<TransactionDetailsDto>> getRecentTransactions() {
+	List<TransactionDetailsDto> studentdetails=schooladminservice.gettransactions();
 		
 		return ResponseEntity.status(200).body(studentdetails);
 	}
@@ -44,12 +45,24 @@ public class SchoolAdminController {
 		return ResponseEntity.status(200).body("total amount received between "+timeframe+":"+total );
 	}
 	@GetMapping("/Dashboard/thismonthtransactions")
-	public ResponseEntity<List<StudentDetailsOfThisMonthTransactionDto>>  getthismonthtransactions() {
+	public ResponseEntity<List<TransactionDetailsDto>>  getthismonthtransactions() {
 		
-		List<StudentDetailsOfThisMonthTransactionDto> student=schooladminservice.getThisMonthTransactions();
+		List<TransactionDetailsDto> student=schooladminservice.getThisMonthTransactions();
 		
 		return ResponseEntity.status(200).body(student);
 	}
+	@GetMapping("/Dashboard/SearchStudentFeeDetails")
+	public ResponseEntity<List<TransactionDetailsDto>> searchStudentDetails(@RequestParam(required = false) String name,@RequestParam(required = false) Long admno,@RequestParam(required = false) String classandsection) {
+		List<TransactionDetailsDto> student=schooladminservice.searchStudentFeeDetails(name,admno,classandsection);
+		System.out.println(student);
+		return  ResponseEntity.status(200).body(student);
+	}
+//	@GetMapping("/Dashboard/SearchStudentFeeDetails")
+//	public String getMont(@RequestParam String param) {
+//		return new String();
+//	}
+	
+	
 	
 	
 	

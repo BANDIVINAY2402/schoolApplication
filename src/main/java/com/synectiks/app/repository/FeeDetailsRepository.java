@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.synectiks.app.entity.FeeDetails;
 import com.synectiks.app.entity.StudentDetailsEntity;
-import com.synectiks.app.entity.StudentDetailsOfThisMonthTransactionDto;
+
 
 import jakarta.persistence.Tuple;
 
@@ -20,37 +20,64 @@ import jakarta.persistence.Tuple;
 public interface FeeDetailsRepository extends JpaRepository<FeeDetails, Long> {
 
 
+
 	
-	@Query("SELECT f.student FROM FeeDetails f WHERE f.amountPaidDate = :amountPaidDate")
-    List<StudentDetailsEntity> findByAmountPaidDate(@Param("amountPaidDate") Date date);
-	
+	@Query("SELECT s.name AS name, s.admissionNo AS admissionNo,s.classAndSection AS classAndSection,f.typeOfTransaction AS typeOfTransaction, f.amountPaid AS amountPaid, f.receiptNo AS receiptNo " +
+		       "FROM StudentDetailsEntity s JOIN s.feeDetails f " +
+		       "WHERE f.amountPaidDate = :amountPaidDate")
+	List<Map<String, Object>>  findByAmountPaidDate(@Param("amountPaidDate") Date date);
+
 	@Query("SELECT SUM(f.amountPaid) FROM FeeDetails f WHERE f.amountPaidDate BETWEEN :startDate AND :endDate")
 	Long findTotalAmountPaidByYear(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 	
-	
-//	@Query("SELECT f FROM FeeDetails f WHERE FUNCTION('MONTH', f.paymentDate) = FUNCTION('MONTH', :currentDate) AND FUNCTION('YEAR', f.paymentDate) = FUNCTION('YEAR', :currentDate)")
-//	List<FeeDetails> findAllFeesPaidByCurrentMonth(@Param("currentDate") Date currentDate);
 
 
-//	@Query("SELECT f FROM FeeDetails f WHERE MONTH(f.amountPaidDate) = MONTH(CURRENT_DATE) AND YEAR(f.amountPaidDate) = YEAR(CURRENT_DATE)")
-//    List<FeeDetails> findFeesPaidThisMonth1();
-////	
-//	 @Query("SELECT com.synectiks.app.entity.StudentDetailsOfThisMonthTransactionDto(s.name, s.admissionNo, s.classAndSection, SUM(f.amountPaid), f.typeOfTransaction) " +
-//	           "FROM StudentDetailsEntity s " +
-//	           "JOIN s.feeDetails f " +
-//	           "WHERE EXTRACT(MONTH FROM f.amountPaidDate) = EXTRACT(MONTH FROM CURRENT_DATE) " +
-//	           "AND EXTRACT(YEAR FROM f.amountPaidDate) = EXTRACT(YEAR FROM CURRENT_DATE) " +
-//	           "GROUP BY s.name, s.admissionNo, s.classAndSection, f.typeOfTransaction")
-//	    List<StudentDetailsOfThisMonthTransactionDto> findFeesPaidThisMonth();
-
-	
 	@Query("SELECT s.name AS name, s.admissionNo AS admissionNo, s.classAndSection AS classAndSection, " +
-		       "SUM(f.amountPaid) AS amountPaid, f.typeOfTransaction AS typeOfTransaction " +
+		       "f.amountPaid AS amountPaid, f.typeOfTransaction AS typeOfTransaction, f.receiptNo AS receiptNo " +
 		       "FROM StudentDetailsEntity s JOIN s.feeDetails f " +
 		       "WHERE EXTRACT(MONTH FROM f.amountPaidDate) = EXTRACT(MONTH FROM CURRENT_DATE) " +
-		       "AND EXTRACT(YEAR FROM f.amountPaidDate) = EXTRACT(YEAR FROM CURRENT_DATE) " +
-		       "GROUP BY s.name, s.admissionNo, s.classAndSection, f.typeOfTransaction")
+		       "AND EXTRACT(YEAR FROM f.amountPaidDate) = EXTRACT(YEAR FROM CURRENT_DATE)")
 		List<Map<String, Object>> findFeesPaidThisMonth();
+	
+	
+//	
+//	@Query("SELECT s.name AS name, s.admissionNo AS admissionNo, s.classAndSection AS classAndSection, " +
+//		       "f.amountPaid AS amountPaid, f.typeOfTransaction AS typeOfTransaction, f.receiptNo AS receiptNo " +
+//		       "FROM StudentDetailsEntity s JOIN s.feeDetails f " +
+//		       "WHERE (:name IS NULL OR s.name = :name) " +
+//		       "AND (:admissionNo IS NULL OR s.admissionNo = :admissionNo) " +
+//		       "AND (:classAndSection IS NULL OR s.classAndSection = :classAndSection)")
+//		List<Map<String, Object>> findStudentAndFeeDetails(@Param("name") String name, 
+//		                                                    @Param("admissionNo") Long admissionNo, 
+//		                                                    @Param("classAndSection") String classAndSection);
 
+//
+//	@Query("SELECT s.name AS name, " +
+//		       "s.admissionNo AS admissionNo, " +
+//		       "s.classAndSection AS classAndSection, " +
+//		       "f.amountPaid AS totalAmountPaid, " +
+//		       "f.typeOfTransaction AS typeOfTransaction, " +
+//		       "f.receiptNo AS receiptNo " +
+//		       "FROM StudentDetailsEntity s " +
+//		       "JOIN s.feeDetails f " +
+//		       "WHERE (:name IS NULL OR s.name = :name) " +
+//		       "AND (:admissionNo IS NULL OR s.admissionNo = :admissionNo) " +
+//		       "AND (:classAndSection IS NULL OR s.classAndSection = :classAndSection)")
+//		List<Map<String, Object>> findStudentAndFeeDetails(
+//		    @Param("name") String name, 
+//		    @Param("admissionNo") Long admissionNo, 
+//		    @Param("classAndSection") String classAndSection);
+//
+	@Query("SELECT s.name AS name, s.admissionNo AS admissionNo, s.classAndSection AS classAndSection, " +
+		       "f.amountPaid AS totalAmountPaid, f.typeOfTransaction AS typeOfTransaction, f.receiptNo AS receiptNo " +
+		       "FROM StudentDetailsEntity s " +
+		       "JOIN s.feeDetails f " +
+		       "WHERE (:name IS NULL OR TRIM(s.name) = TRIM(:name))  " +
+		       "AND (:admissionNo IS NULL OR s.admissionNo = :admissionNo) " +
+		       "AND (:classAndSection IS NULL OR s.classAndSection = :classAndSection)")
+		List<Map<String, Object>> findStudentAndFeeDetails(
+		    @Param("name") String name,
+		    @Param("admissionNo") Long admissionNo,
+		    @Param("classAndSection") String classAndSection);
 
 }

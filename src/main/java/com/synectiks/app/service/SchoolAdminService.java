@@ -18,8 +18,10 @@ import org.springframework.stereotype.Service;
 
 import com.synectiks.app.entity.FeeDetails;
 import com.synectiks.app.entity.StudentDetailsEntity;
-import com.synectiks.app.entity.StudentDetailsOfThisMonthTransactionDto;
-import com.synectiks.app.mapper.StudentDetaulsOfThisMonthTransactionsMapper;
+
+import com.synectiks.app.entity.TransactionDetailsDto;
+
+import com.synectiks.app.mapper.TransactionDetailsMapper;
 import com.synectiks.app.repository.FeeDetailsRepository;
 import com.synectiks.app.repository.StudentadminRepository;
 
@@ -36,14 +38,18 @@ public class SchoolAdminService {
 	LocalDate today= LocalDate.now();
 	Instant instant = today.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
 	
-	public List<StudentDetailsEntity> gettransactions() {
+	public List<TransactionDetailsDto> gettransactions() {
 		LocalDate today= LocalDate.now();
 		Instant instant = today.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
 		Date date = Date.from(instant);
 		System.out.println(date);
-		List<StudentDetailsEntity> studentdetailsentity= feedetailsrepository.findByAmountPaidDate(date);
-		System.out.println(studentdetailsentity);
-		return studentdetailsentity;
+		System.out.println(feedetailsrepository.findByAmountPaidDate(date));
+		List<Map<String, Object>> transactions= feedetailsrepository.findByAmountPaidDate(date);
+		
+		List<TransactionDetailsDto> transactiondetails=TransactionDetailsMapper.INSTANCE.toTransactionDetails(transactions);
+		//System.out.println(studentdetailsentity);
+		System.out.println(transactiondetails);
+		return transactiondetails;
 		
 	}
 
@@ -88,16 +94,65 @@ public class SchoolAdminService {
 		
 	}
 
-	public List<StudentDetailsOfThisMonthTransactionDto> getThisMonthTransactions() {
+	public List<TransactionDetailsDto> getThisMonthTransactions() {
 		Date currentdate= Date.from(instant);
 		System.out.println(currentdate);
 		List<Map<String, Object>> studentdetails=feedetailsrepository.findFeesPaidThisMonth();
 		
-		List<StudentDetailsOfThisMonthTransactionDto> sd=StudentDetaulsOfThisMonthTransactionsMapper.INSTANCE.toThisMonthTransactionDetails(studentdetails);
+		List<TransactionDetailsDto> sd=TransactionDetailsMapper.INSTANCE.toTransactionDetails(studentdetails);
 		
 		 return sd;
 		
 		
+	}
+
+
+
+
+
+	public  List<TransactionDetailsDto> searchStudentFeeDetails(String name, Long admno, String classandsection) {
+	
+	//List<Map<String, Object>> studentDetails = feedetailsrepository.findStudentAndFeeDetails(name, admno, classandsection);
+System.out.println("hii");
+if(name.isEmpty()) {
+	name=null;
+	
+}
+if(classandsection.isEmpty()) {
+	classandsection=null;
+}
+
+List<Map<String, Object>> studentdetails=	feedetailsrepository.findStudentAndFeeDetails(name,admno,classandsection);
+System.out.println(name+"  "+admno+"  "+classandsection);
+System.out.println(studentdetails.isEmpty());
+	for (Map<String, Object> details : studentdetails) {
+	    if (details == null) {
+	        System.out.println("Map is null");
+	        continue;
+	    }
+
+	    else {
+	    	System.out.println("not a null");
+	    }
+	    // Iterate over each key-value pair in the map
+	    for (Map.Entry<String, Object> entry : details.entrySet()) {
+	        String key = entry.getKey();    // Get the key
+	        Object value = entry.getValue(); // Get the value
+
+	        // Check if the value is null
+	        if (value == null) {
+	            System.out.println("Key: " + key + " has a null value");
+	        } else {
+	            // Process the key-value pair
+	            System.out.println("Key: " + key + ", Value: " + value);
+	        }
+	    }
+	}
+
+		List<TransactionDetailsDto> sd=TransactionDetailsMapper.INSTANCE.toTransactionDetails(studentdetails);
+		System.out.println(sd);
+		
+		return sd;
 	}
 
 }

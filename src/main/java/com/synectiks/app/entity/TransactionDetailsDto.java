@@ -1,31 +1,32 @@
 package com.synectiks.app.entity;
 
-import java.util.Objects;
-
-public class StudentDetailsOfThisMonthTransactionDto {
-	
+public class TransactionDetailsDto {
 	 private String name;
 	    private Long admissionNo;
 	    private String classAndSection;
-	    private Integer totalAmountPaid;
+	   
 	    private String typeOfTransaction;
 	    
+	    private String paymentNo;
+		private Integer amountPaid;
+	
 
-	public StudentDetailsOfThisMonthTransactionDto(String name, Long admissionNo, String classAndSection,
-				Integer totalAmountPaid, String typeOfTransaction) {
+	
+
+
+	
+
+
+	public TransactionDetailsDto(String name, Long admissionNo, String classAndSection, String typeOfTransaction,
+				String paymentNo, Integer amountPaid) {
 			super();
 			this.name = name;
 			this.admissionNo = admissionNo;
 			this.classAndSection = classAndSection;
-			this.totalAmountPaid = totalAmountPaid;
 			this.typeOfTransaction = typeOfTransaction;
+			this.paymentNo = paymentNo;
+			this.amountPaid = amountPaid;
 		}
-	
-	
-	
-	public StudentDetailsOfThisMonthTransactionDto() {
-		// TODO Auto-generated constructor stub
-	}
 
 
 
@@ -60,11 +61,32 @@ public class StudentDetailsOfThisMonthTransactionDto {
 		this.typeOfTransaction = typeOfTransaction;
 	}
 
-	public Integer getTotalAmountPaid() {
-		return totalAmountPaid;
+	
+
+
+	
+
+
+	public String getPaymentNo() {
+		return paymentNo;
 	}
-	public void setTotalAmountPaid(Integer totalAmountPaid) {
-		this.totalAmountPaid = totalAmountPaid;
+
+
+
+	public void setPaymentNo(String paymentNo) {
+		this.paymentNo = paymentNo;
+	}
+
+
+
+	public Integer getAmountPaid() {
+		return amountPaid;
+	}
+
+
+
+	public void setAmountPaid(Integer amountPaid) {
+		this.amountPaid = amountPaid;
 	}
 
 
@@ -72,10 +94,10 @@ public class StudentDetailsOfThisMonthTransactionDto {
 	@Override
 	public String toString() {
 		return "StudentDetailsOfThisMonthTransactionDto [name=" + name + ", admissionNo=" + admissionNo
-				+ ", classAndSection=" + classAndSection + ", totalAmountPaid=" + totalAmountPaid
-				+ ", typeOfTransaction=" + typeOfTransaction + "]";
+				+ ", classAndSection=" + classAndSection + ", typeOfTransaction=" + typeOfTransaction + ", paymentNo="
+				+ paymentNo + ", amountPaid=" + amountPaid + "]";
 	}
 
-	
+
 
 }

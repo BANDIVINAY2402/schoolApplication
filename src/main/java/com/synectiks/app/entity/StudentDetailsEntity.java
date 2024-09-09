@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,9 +22,11 @@ public class StudentDetailsEntity {
 	private String fatherName;
 	
 	private String motherName;
+	
 	private Long rollNo;
 	private String classAndSection;
 	private Date dateOfBirth;
+	//@Column(unique = true)
 	private Long aadharno;
 	private String schoolTransport;
 	
